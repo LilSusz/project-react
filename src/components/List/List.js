@@ -1,6 +1,7 @@
 import styles from './List.module.scss';
 import { useState } from 'react';
 import { useEffect } from 'react';
+import shortid from 'shortid';
 import Column from '../Column/Column';
 
 const List = () => {
@@ -9,16 +10,16 @@ const List = () => {
     { id: 1, title: 'Books', icon: 'book' },
     { id: 2, title: 'Movies', icon: 'film' },
     { id: 3, title: 'Games', icon: 'gamepad' }
-]);
+  ]);
 
-  useEffect(() => {
+  const handleSubmit = e => {
+    e.preventDefault();
+    setColumns([...columns, { id: shortid(), title: value }]);
+    setValue('');
+  };
 
-    setTimeout(() => {
-      setColumns([...columns, { id: 4, title: 'Test column'}]);
-    }, 2000);
-
-  }, []);
-
+  const [value, setValue] = useState('');
+  
   return (
     <div className={styles.list}>
       <header className={styles.header}>
@@ -28,6 +29,10 @@ const List = () => {
       <section className={styles.columns}>
         {columns.map(column => <Column key={column.id} title={column.title} icon={column.icon} />)}
       </section>
+      <form onSubmit={handleSubmit}>
+        <input type="text" value={value} onChange={e => setValue(e.target.value)} />
+        <button>Add column</button>
+      </form>
     </div>
   );
 };
